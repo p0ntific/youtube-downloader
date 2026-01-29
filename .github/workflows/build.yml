@@ -1,0 +1,60 @@
+name: Build Apps
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install flet yt-dlp pyinstaller
+
+      - name: Build macOS app
+        run: |
+          flet pack main.py --name "YouTube Downloader" --icon icon.icns
+
+      - name: Zip app bundle
+        run: |
+          cd dist
+          zip -r "YouTube-Downloader-macOS.zip" "YouTube Downloader.app"
+
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: YouTube-Downloader-macOS
+          path: dist/YouTube-Downloader-macOS.zip
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          pip install flet yt-dlp pyinstaller
+
+      - name: Build Windows app
+        run: |
+          flet pack main.py --name "YouTube Downloader" --icon icon.ico
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: YouTube-Downloader-Windows
+          path: dist/YouTube Downloader.exe
