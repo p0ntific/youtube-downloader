@@ -332,7 +332,6 @@ class YouTubeDownloader:
                 'progress_hooks': [progress_hook],
                 'quiet': True,
                 'no_warnings': True,
-                'cookiesfrombrowser': ('chrome',),
             }
 
             try:
@@ -503,7 +502,7 @@ class YouTubeDownloader:
             self.download_btn.icon = ft.Icons.DOWNLOAD_ROUNDED
 
     def _pick_folder(self, e):
-        def on_result(result: ft.FilePickerResultEvent):
+        def on_result(result):
             if result.path:
                 self.download_path = Path(result.path)
                 self.path_text.value = self._format_path(self.download_path)
