@@ -322,6 +322,8 @@ class YouTubeDownloader:
                 self.page.run_thread(lambda: self._update_item_ui(item_id))
 
         def download():
+            # Ensure download path exists
+            self.download_path.mkdir(parents=True, exist_ok=True)
             output_template = str(self.download_path / "%(title)s.%(ext)s")
 
             ydl_opts = {
@@ -368,13 +370,21 @@ class YouTubeDownloader:
                 item.status = "error"
                 error_msg = str(ex)
                 if "Sign in" in error_msg or "login" in error_msg.lower():
-                    item.error = "Требуется авторизация в браузере"
+                    item.error = "Требуется авторизация в Chrome"
                 elif "unavailable" in error_msg.lower():
                     item.error = "Видео недоступно"
                 elif "private" in error_msg.lower():
                     item.error = "Приватное видео"
+                elif "cookie" in error_msg.lower():
+                    item.error = "Ошибка cookies Chrome"
+                elif "No such file" in error_msg or "path" in error_msg.lower():
+                    item.error = f"Ошибка пути: {error_msg[:50]}"
+                elif "blocked" in error_msg.lower() or "geo" in error_msg.lower():
+                    item.error = "Видео заблокировано в регионе"
                 else:
-                    item.error = "Ошибка загрузки"
+                    # Show actual error for debugging
+                    short_error = error_msg[:100] if len(error_msg) > 100 else error_msg
+                    item.error = short_error
             finally:
                 self.page.run_thread(lambda: self._update_item_ui(item_id))
 

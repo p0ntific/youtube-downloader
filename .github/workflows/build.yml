@@ -16,8 +16,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: |
-          pip install flet yt-dlp pyinstaller
+        run: pip install flet yt-dlp pyinstaller
 
       - name: Build macOS app
         run: |
@@ -47,13 +46,13 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: |
-          pip install flet yt-dlp pyinstaller
+        run: pip install flet yt-dlp pyinstaller
 
       - name: Build Windows app
+        shell: cmd
         run: |
-          $fletPath = python -c "import flet; print(flet.__path__[0])"
-          flet pack main.py --name "YouTube Downloader" --icon icon.ico --add-data "${fletPath};flet"
+          for /f "delims=" %%i in ('python -c "import flet; print(flet.__path__[0])"') do set FLET_PATH=%%i
+          flet pack main.py --name "YouTube Downloader" --icon icon.ico --add-data "%FLET_PATH%;flet"
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
