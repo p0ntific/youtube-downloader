@@ -501,25 +501,19 @@ class YouTubeDownloader:
             self.download_btn.text = "Скачать"
             self.download_btn.icon = ft.Icons.DOWNLOAD_ROUNDED
 
-    def _pick_folder(self, e):
-        def on_result(result):
-            if result.path:
-                self.download_path = Path(result.path)
-                self.path_text.value = self._format_path(self.download_path)
-                self.page.update()
-
-        picker = ft.FilePicker(on_result=on_result)
-        self.page.overlay.append(picker)
-        self.page.update()
-        picker.get_directory_path(dialog_title="Выберите папку для загрузки")
-
-    def _format_path(self, path: Path) -> str:
-        home = Path.home()
-        try:
-            rel = path.relative_to(home)
-            return f"~/{rel}"
-        except ValueError:
-            return str(path)
+    def _get_download_path_display(self) -> str:
+        """Returns display path for current OS"""
+        if os.name == "nt":
+            # Windows: show full path
+            return str(self.download_path)
+        else:
+            # macOS/Linux: show with ~
+            home = Path.home()
+            try:
+                rel = self.download_path.relative_to(home)
+                return f"~/{rel}"
+            except ValueError:
+                return str(self.download_path)
 
     def _open_folder(self, e):
         import subprocess
@@ -529,29 +523,18 @@ class YouTubeDownloader:
             subprocess.run(["open", self.download_path])
 
     def _build_ui(self):
-        # Header with path selector
-        self.path_text = ft.Text(
-            self._format_path(self.download_path),
-            size=13,
-            color="#6B7280",
-            weight=ft.FontWeight.W_500,
-        )
-
+        # Download path display
         path_row = ft.Container(
             content=ft.Row(
                 [
                     ft.Icon(ft.Icons.FOLDER_ROUNDED, size=18, color="#EF4444"),
-                    self.path_text,
-                    ft.Container(expand=True),
-                    ft.TextButton(
-                        "Изменить",
-                        style=ft.ButtonStyle(
-                            color="#EF4444",
-                            padding=ft.Padding(8, 4, 8, 4),
-                            mouse_cursor=ft.MouseCursor.CLICK,
-                        ),
-                        on_click=self._pick_folder,
+                    ft.Text(
+                        self._get_download_path_display(),
+                        size=13,
+                        color="#6B7280",
+                        weight=ft.FontWeight.W_500,
                     ),
+                    ft.Container(expand=True),
                     ft.IconButton(
                         icon=ft.Icons.OPEN_IN_NEW_ROUNDED,
                         icon_size=18,
