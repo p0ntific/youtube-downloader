@@ -21,7 +21,8 @@ jobs:
 
       - name: Build macOS app
         run: |
-          flet pack main.py --name "YouTube Downloader" --icon icon.icns
+          FLET_PATH=$(python -c "import flet; print(flet.__path__[0])")
+          flet pack main.py --name "YouTube Downloader" --icon icon.icns --add-data "$FLET_PATH:flet"
 
       - name: Zip app bundle
         run: |
@@ -51,7 +52,8 @@ jobs:
 
       - name: Build Windows app
         run: |
-          flet pack main.py --name "YouTube Downloader" --icon icon.ico
+          $fletPath = python -c "import flet; print(flet.__path__[0])"
+          flet pack main.py --name "YouTube Downloader" --icon icon.ico --add-data "${fletPath};flet"
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
