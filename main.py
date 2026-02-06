@@ -611,37 +611,67 @@ class YouTubeDownloader:
             on_click=self._on_download,
         )
 
+        # Birthday banner
+        birthday_banner = ft.Container(
+            content=ft.Row(
+                [
+                    ft.Text(
+                        "подарок для мамы  ·  с днём рождения",
+                        size=12,
+                        weight=ft.FontWeight.W_500,
+                        color="#ffffff",
+                    ),
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
+            ),
+            gradient=ft.LinearGradient(
+                begin=ft.Alignment(-1, 0),
+                end=ft.Alignment(1, 0),
+                colors=["#7d5a6b", "#9b7a8a", "#c4a57b", "#9b7a8a", "#7d5a6b"],
+            ),
+            padding=ft.Padding(0, 9, 0, 9),
+        )
+
         # Main layout
         content = ft.Container(
             content=ft.Column(
                 [
-                    ft.Row(
-                        [
-                            ft.Icon(ft.Icons.PLAY_CIRCLE_FILLED, size=32, color="#EF4444"),
-                            ft.Text(
-                                "YouTube Загрузчик",
-                                size=22,
-                                weight=ft.FontWeight.W_700,
-                                color="#111827",
-                            ),
-                            ft.Container(expand=True),
-                            version_text,
-                        ],
-                        spacing=12,
-                        vertical_alignment=ft.CrossAxisAlignment.CENTER,
-                    ),
-                    ft.Container(height=8),
-                    path_row,
-                    ft.Container(height=16),
-                    self.inputs_column,
-                    ft.Container(height=8),
-                    ft.Row(
-                        [self.download_btn],
-                        alignment=ft.MainAxisAlignment.CENTER,
+                    birthday_banner,
+                    ft.Container(
+                        content=ft.Column(
+                            [
+                                ft.Row(
+                                    [
+                                        ft.Icon(ft.Icons.PLAY_CIRCLE_FILLED, size=32, color="#EF4444"),
+                                        ft.Text(
+                                            "YouTube Загрузчик",
+                                            size=22,
+                                            weight=ft.FontWeight.W_700,
+                                            color="#111827",
+                                        ),
+                                        ft.Container(expand=True),
+                                        version_text,
+                                    ],
+                                    spacing=12,
+                                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                                ),
+                                ft.Container(height=8),
+                                path_row,
+                                ft.Container(height=16),
+                                self.inputs_column,
+                                ft.Container(height=8),
+                                ft.Row(
+                                    [self.download_btn],
+                                    alignment=ft.MainAxisAlignment.CENTER,
+                                ),
+                            ],
+                        ),
+                        padding=ft.Padding(24, 20, 24, 24),
+                        expand=True,
                     ),
                 ],
+                spacing=0,
             ),
-            padding=ft.Padding(24, 32, 24, 24),
             expand=True,
         )
 
